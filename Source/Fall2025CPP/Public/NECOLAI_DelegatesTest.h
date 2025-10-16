@@ -4,22 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Engine/TriggerBox.h"
-#include "NECOLAI_Door.h"
-#include "NECOLAI_Key.generated.h"
+#include "NECOLAI_DelegatesTest.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FALL2025CPP_API ANECOLAI_Key : public ATriggerBox
+class FALL2025CPP_API ANECOLAI_DelegatesTest : public ATriggerBox
 {
 	GENERATED_BODY()
-
+	
 public:
-	ANECOLAI_Key();
-
-	UPROPERTY(EditAnywhere)
-	ANECOLAI_Door* doorToOpen;
+	ANECOLAI_DelegatesTest();
 
 	UFUNCTION()
 	void OnPickup(class AActor* OverlappedActor, class AActor* OtherActor);

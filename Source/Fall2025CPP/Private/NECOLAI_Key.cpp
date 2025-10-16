@@ -5,30 +5,13 @@
 
 ANECOLAI_Key::ANECOLAI_Key()
 {
+	OnActorBeginOverlap.AddDynamic(this, &ANECOLAI_Key::OnPickup);
 }
 
-bool ANECOLAI_Key::IsPlayerCharacter(AActor* ActorToCheck)
+void ANECOLAI_Key::OnPickup(AActor* OverlappedActor, AActor* OtherActor)
 {
-	// TODO: Make this check if the object passed in is the player character, if so, then return true
-	if (ActorToCheck->IsA(ANECOLAI_Character::StaticClass()))
-		return true;
-	else
-		return false;
-}
-
-void ANECOLAI_Key::TryOpenDoor(AActor* OverlappedActor, AActor* OtherActor)
-{
-	if (IsPlayerCharacter(OtherActor))
-	{
-		OpenDoor();
-	}
-}
-
-void ANECOLAI_Key::OpenDoor()
-{
-	// Destroy the door we are supposed to open
+	// Destroy the door we want to open
 	doorToOpen->Destroy();
-
-	// Destroy the key (so it looks like we picked it up)
+	// Destroy this key
 	this->Destroy();
 }
