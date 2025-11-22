@@ -18,6 +18,12 @@ private:
 	UPROPERTY(EditAnywhere)
 	float turnSpeed;
 
+	// The animation to play when the player dies
+	UPROPERTY(EditAnywhere)
+	UAnimSequence* deathAnim;
+
+	// Is this player dead and ready to restart the level?
+	bool isDead = false;
 public:
 	// Sets default values for this character's properties
 	ANECOLAI_Character();
@@ -26,7 +32,16 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	virtual void Die();
 public:	
+	UPROPERTY(EditAnywhere)
+	/// <summary>
+	/// The maximum and starting health for this character
+	/// </summary>
+	float maxHealth;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -37,4 +52,9 @@ public:
 	void MoveRight(float moveVal);
 	void Rotate(float turnVal);
 	void DoJump();
+protected:
+	/// <summary>
+	/// The current health of this character
+	/// </summary>
+	float currentHealth;
 };

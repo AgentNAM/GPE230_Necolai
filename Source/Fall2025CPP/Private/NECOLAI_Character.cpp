@@ -15,7 +15,45 @@ ANECOLAI_Character::ANECOLAI_Character()
 void ANECOLAI_Character::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	currentHealth = maxHealth; // Initialize currentHealth
+}
+
+float ANECOLAI_Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	// If the player is not already dead
+	if (!isDead)
+	{
+		// Subtract incoming damage
+		currentHealth -= DamageAmount;
+
+		UE_LOG(LogTemp, Log, TEXT("Player took %f damage. %f health remaining."), DamageAmount, currentHealth);
+
+		// Check if player has died
+		if (currentHealth <= 0)
+		{
+			Die();
+		}
+
+		return DamageAmount;
+	}
+	// If the player is already dead
+	else
+	{
+		return 0;
+	}
+}
+
+void ANECOLAI_Character::Die()
+{
+	isDead = true;
+	currentHealth = 0;
+	// Prevent player from moving
+	moveSpeed = 0;
+	turnSpeed = 0;
+
+	GetMesh()->PlayAnimation(deathAnim, false);
+
+	// ToDo: Trigger game over state and prompt player to restart level
 }
 
 // Called every frame
@@ -36,17 +74,17 @@ void ANECOLAI_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 void ANECOLAI_Character::MoveForward(float moveVal)
 {
-	AddMovementInput(GetActorForwardVector(), moveVal);
+	AddMovementInput(GetActorForwardVector(), moveVal * moveSpeed);
 }
 
 void ANECOLAI_Character::MoveRight(float moveVal)
 {
-	AddMovementInput(GetActorRightVector(), moveVal);
+	AddMovementInput(GetActorRightVector(), moveVal * moveSpeed);
 }
 
 void ANECOLAI_Character::Rotate(float turnVal)
 {
-	AddControllerYawInput(turnVal);
+	AddControllerYawInput(turnVal * turnSpeed);
 }
 
 void ANECOLAI_Character::DoJump()
