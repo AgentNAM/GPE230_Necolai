@@ -70,6 +70,7 @@ void ANECOLAI_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ANECOLAI_Character::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("Rotate"), this, &ANECOLAI_Character::Rotate);
 	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &ANECOLAI_Character::DoJump);
+	PlayerInputComponent->BindAction(TEXT("Stun"), IE_Pressed, this, &ANECOLAI_Character::DoStun);
 }
 
 void ANECOLAI_Character::MoveForward(float moveVal)
@@ -93,3 +94,28 @@ void ANECOLAI_Character::DoJump()
 	Jump();
 }
 
+void ANECOLAI_Character::DoStun()
+{
+	// Get all the NECOLAI_Characters within a certain radius of this character
+	// Call the stun event on those characters - that event will set an "isStunned" on their blackboard and set a timer
+	//		isStunned is their first decision option, so they always do it first
+	//		When the timer ends, it will set isStunned back to false
+
+}
+
+void ANECOLAI_Character::ActivateStunParticleSystem()
+{
+	// Spawn a particle system and play it once
+	if (stunSystem)
+	{
+		USceneComponent* AttachComp = GetDefaultAttachComponent();
+
+		UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(stunSystem, AttachComp, NAME_None, FVector(0), FRotator(0), EAttachLocation::Type::KeepRelativeOffset, true);
+
+		NiagaraComp->Activate();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Player attempted to use stun ability, but no template particle was found."));
+	}
+}

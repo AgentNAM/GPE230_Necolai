@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 #include "GameFramework/Character.h"
 #include "NECOLAI_Character.generated.h"
 
@@ -24,6 +26,13 @@ private:
 
 	// Is this player dead and ready to restart the level?
 	bool isDead = false;
+
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* stunSystem;
+
+	UFUNCTION(BlueprintCallable)
+	void ActivateStunParticleSystem();
+
 public:
 	// Sets default values for this character's properties
 	ANECOLAI_Character();
@@ -52,6 +61,8 @@ public:
 	void MoveRight(float moveVal);
 	void Rotate(float turnVal);
 	void DoJump();
+	void DoStun();
+
 protected:
 	/// <summary>
 	/// The current health of this character
