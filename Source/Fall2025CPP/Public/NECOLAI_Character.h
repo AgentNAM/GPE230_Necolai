@@ -68,4 +68,7 @@ protected:
 	/// The current health of this character
 	/// </summary>
 	float currentHealth;
+public:
+	UFUNCTION()
+	float Heal(float healthToAdd);
 };

@@ -56,6 +56,31 @@ void ANECOLAI_Character::Die()
 	// ToDo: Trigger game over state and prompt player to restart level
 }
 
+float ANECOLAI_Character::Heal(float healthToAdd)
+{
+	// If the player is not dead
+	if (!isDead)
+	{
+		// Add incoming health
+		currentHealth += healthToAdd;
+
+		UE_LOG(LogTemp, Log, TEXT("Player restored %f health. %f health remaining."), healthToAdd, currentHealth);
+
+		// Prevent overheal
+		if (currentHealth > maxHealth)
+		{
+			currentHealth = maxHealth;
+		}
+
+		return healthToAdd;
+	}
+	// If the player is already dead
+	else
+	{
+		return 0;
+	}
+}
+
 // Called every frame
 void ANECOLAI_Character::Tick(float DeltaTime)
 {
