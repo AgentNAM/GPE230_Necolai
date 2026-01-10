@@ -15,7 +15,15 @@ ANECOLAI_Character::ANECOLAI_Character()
 void ANECOLAI_Character::BeginPlay()
 {
 	Super::BeginPlay();
+
+	_controller = Cast<APlayerController>(GetController()); // Initialize _controller
+
 	currentHealth = maxHealth; // Initialize currentHealth
+
+	// Create game over screen widget and victory screen widget
+	_gameOverScreenInstance = CreateWidget(GetWorld(), _gameOverScreenTemplate);
+	_victoryScreenInstance = CreateWidget(GetWorld(), _victoryScreenTemplate);
+	_pauseMenuScreenInstance = CreateWidget(GetWorld(), _pauseMenuScreenTemplate);
 }
 
 float ANECOLAI_Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -54,6 +62,7 @@ void ANECOLAI_Character::Die()
 	GetMesh()->PlayAnimation(deathAnim, false);
 
 	// ToDo: Trigger game over state and prompt player to restart level
+	GetWorldTimerManager().SetTimer(GameOverTimerHandle, this, &ANECOLAI_Character::OpenGameOverScreen, deathAnim->GetPlayLength());
 }
 
 float ANECOLAI_Character::Heal(float healthToAdd)
@@ -81,6 +90,11 @@ float ANECOLAI_Character::Heal(float healthToAdd)
 	}
 }
 
+float ANECOLAI_Character::GetCurrentHealth()
+{
+	return currentHealth;
+}
+
 // Called every frame
 void ANECOLAI_Character::Tick(float DeltaTime)
 {
@@ -96,6 +110,8 @@ void ANECOLAI_Character::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAxis(TEXT("Rotate"), this, &ANECOLAI_Character::Rotate);
 	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &ANECOLAI_Character::DoJump);
 	PlayerInputComponent->BindAction(TEXT("Stun"), IE_Pressed, this, &ANECOLAI_Character::DoStun);
+
+	PlayerInputComponent->BindAction(TEXT("Pause"), IE_Pressed, this, &ANECOLAI_Character::ShowPauseMenu);
 }
 
 void ANECOLAI_Character::MoveForward(float moveVal)
@@ -143,4 +159,35 @@ void ANECOLAI_Character::ActivateStunParticleSystem()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Player attempted to use stun ability, but no template particle was found."));
 	}
+}
+
+void ANECOLAI_Character::PauseGameplay(bool bIsPaused)
+{
+	_controller->SetPause(bIsPaused);
+}
+
+void ANECOLAI_Character::ShowMouseCursor()
+{
+	_controller->bShowMouseCursor = true;
+}
+
+void ANECOLAI_Character::OpenVictoryScreen()
+{
+	_victoryScreenInstance->AddToViewport();
+	PauseGameplay(true);
+	ShowMouseCursor();
+}
+
+void ANECOLAI_Character::OpenGameOverScreen()
+{
+	_gameOverScreenInstance->AddToViewport();
+	PauseGameplay(true);
+	ShowMouseCursor();
+}
+
+void ANECOLAI_Character::ShowPauseMenu()
+{
+	_pauseMenuScreenInstance->AddToViewport();
+	PauseGameplay(true);
+	ShowMouseCursor();
 }

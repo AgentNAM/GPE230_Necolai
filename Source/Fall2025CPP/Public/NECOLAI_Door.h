@@ -14,4 +14,7 @@ class FALL2025CPP_API ANECOLAI_Door : public ATriggerBox
 {
 	GENERATED_BODY()
 	
+public:
+	UFUNCTION()
+	void OpenSelf();
 };

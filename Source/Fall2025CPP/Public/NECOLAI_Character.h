@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Blueprint/UserWidget.h"
 #include "GameFramework/Character.h"
 #include "NECOLAI_Character.generated.h"
 
@@ -45,7 +46,7 @@ protected:
 
 	virtual void Die();
 public:	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	/// <summary>
 	/// The maximum and starting health for this character
 	/// </summary>
@@ -71,4 +72,33 @@ protected:
 public:
 	UFUNCTION()
 	float Heal(float healthToAdd);
+	UFUNCTION(BlueprintCallable)
+	float GetCurrentHealth();
+public:
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> _gameOverScreenTemplate;
+	UUserWidget* _gameOverScreenInstance;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> _victoryScreenTemplate;
+	UUserWidget* _victoryScreenInstance;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> _pauseMenuScreenTemplate;
+	UUserWidget* _pauseMenuScreenInstance;
+protected:
+	/// <summary>
+	/// The controller that manages this character
+	/// </summary>
+	APlayerController* _controller;
+protected:
+	virtual void OpenGameOverScreen();
+	virtual void PauseGameplay(bool bIsPaused);
+	virtual void ShowMouseCursor();
+public:
+	virtual void OpenVictoryScreen();
+
+	FTimerHandle GameOverTimerHandle;
+
+	virtual void ShowPauseMenu();
 };
