@@ -74,6 +74,8 @@ public:
 	float Heal(float healthToAdd);
 	UFUNCTION(BlueprintCallable)
 	float GetCurrentHealth();
+	UFUNCTION(BlueprintImplementableEvent)
+	void HandleLandmine();
 public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UUserWidget> _gameOverScreenTemplate;
@@ -96,9 +98,9 @@ protected:
 	virtual void PauseGameplay(bool bIsPaused);
 	virtual void ShowMouseCursor();
 public:
-	virtual void OpenVictoryScreen();
-
 	FTimerHandle GameOverTimerHandle;
+
+	virtual void OpenVictoryScreen();
 
 	virtual void ShowPauseMenu();
 };

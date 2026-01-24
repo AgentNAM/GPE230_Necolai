@@ -15,6 +15,8 @@ class FALL2025CPP_API UNECOLAI_SaveGame : public USaveGame
 	GENERATED_BODY()
 	
 public:
+	UNECOLAI_SaveGame();
+
 	UPROPERTY(BlueprintReadWrite)
 	int furthestCompletedLevel;
 

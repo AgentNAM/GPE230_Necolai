@@ -61,7 +61,7 @@ void ANECOLAI_Character::Die()
 
 	GetMesh()->PlayAnimation(deathAnim, false);
 
-	// ToDo: Trigger game over state and prompt player to restart level
+	// Trigger game over state and prompt player to restart level
 	GetWorldTimerManager().SetTimer(GameOverTimerHandle, this, &ANECOLAI_Character::OpenGameOverScreen, deathAnim->GetPlayLength());
 }
 

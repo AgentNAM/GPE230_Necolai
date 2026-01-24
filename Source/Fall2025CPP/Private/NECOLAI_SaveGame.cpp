@@ -3,3 +3,6 @@
 
 #include "NECOLAI_SaveGame.h"
 
+UNECOLAI_SaveGame::UNECOLAI_SaveGame() {
+
+}

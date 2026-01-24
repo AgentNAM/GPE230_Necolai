@@ -18,6 +18,7 @@ void ANECOLAI_Pickup::OnPickup(class AActor* OverlappedActor, class AActor* Othe
 		// Create a variable pointing to the player
 		ANECOLAI_Character* player = Cast<ANECOLAI_Character>(OtherActor);
 		Apply(player); // Apply this pickup's effect to the player
+		player = nullptr;
 		DestroySelf(); // Destroy this pickup
 	}
 }
